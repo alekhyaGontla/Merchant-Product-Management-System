@@ -1,247 +1,156 @@
-package org.merchantProductApp.controller;
+# 🛒 Merchant Product Management System
 
-import java.util.List;
-import java.util.Scanner;
+A console-based Java application to manage merchants and their products using **Hibernate ORM** and **MySQL**. Supports full CRUD operations, merchant authentication, and product filtering — all through a menu-driven CLI.
 
-import org.MerchantApp.dao.MerchantDao;
-import org.MerchantApp.dao.ProductDao;
-import org.MerchantApp.dto.Merchant;
-import org.MerchantApp.dto.Product;
+---
 
-public class MerchantProductController {
+## 📌 Features
 
-	static Scanner sc = new Scanner(System.in);
-	static MerchantDao mdao = new MerchantDao();
-	static ProductDao pdao = new ProductDao();
+### Merchant Operations
+- Save a new merchant (name, phone, GST number, email, password)
+- Update merchant details
+- Find merchant by ID
+- Verify merchant by **email & password**
+- Verify merchant by **phone & password**
 
-	public static void main(String[] args) {
+### Product Operations
+- Add a product linked to a merchant
+- Update product details (name, brand, category, cost)
+- Find products by **product ID**
+- Find products by **category**
+- Find products by **merchant ID**
 
-		System.out.println("1.Save Merchant");
-		System.out.println("2.Update Merchant");
-		System.out.println("3.Find Merchant By Id");
-		System.out.println("4.Verify Merchant by email and password");
-		System.out.println("5.Verify Merchant by phone and password");
-		System.out.println("6.Add Product");
-		System.out.println("7.Update Product");
-		System.out.println("8.Find Products by id");
-		System.out.println("9.Find Products by brand and category");
-		System.out.println("10.Find Products by merchant id");
-		System.out.println("Enter your choice");
+---
 
-		int choice = sc.nextInt();
-		switch (choice) {
-		case 1:
-			saveMerchant();
+## 🛠️ Tech Stack
 
-			break;
-		case 2:
-			updateMerchant();
+| Technology | Purpose |
+|------------|---------|
+| Java (JDK 8+) | Core application logic |
+| Hibernate ORM | Object-relational mapping & DB operations |
+| MySQL | Relational database |
+| Scanner (CLI) | Console-based user interaction |
 
-			break;
-		case 3:
-			findMerchantById();
+---
 
-			break;
-		case 4:
-			verifyMerchantByEmailIdAndPassword();
+## 📁 Project Structure
 
-			break;
-		case 5:
-			verifyMerchantByPhoneAndPassword();
+```
+Merchant-Product-Management-System/
+├── src/
+│   └── org/
+│       ├── MerchantApp/
+│       │   ├── dao/
+│       │   │   ├── MerchantDao.java
+│       │   │   └── ProductDao.java
+│       │   └── dto/
+│       │       ├── Merchant.java
+│       │       └── Product.java
+│       └── merchantProductApp/
+│           └── controller/
+│               └── MerchantProductController.java
+├── hibernate.cfg.xml
+└── README.md
+```
 
-			break;
-		case 6:
-			addProduct();
+---
 
-			break;
-		case 7:
-			updateProduct();
+## ⚙️ Setup & Installation
 
-			break;
-		case 8:
-			findProductById();
+### Prerequisites
+- Java JDK 8 or higher
+- MySQL Server
+- Hibernate 5.x
+- Any Java IDE (IntelliJ IDEA, Eclipse)
 
-			break;
-		case 9:
-			findProductByCategoryAndBrand();
+### Steps
 
-			break;
-		
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/alekhyaGontla/Merchant-Product-Management-System.git
+   cd Merchant-Product-Management-System
+   ```
 
-		default:
-			System.err.println("Enter the valid choice");
-			break;
-		}
+2. **Set up the MySQL database**
+   ```sql
+   CREATE DATABASE merchant_db;
+   ```
 
-	}
+3. **Configure Hibernate**
 
-	// 1. Save the Merchant
+   Update `hibernate.cfg.xml` with your MySQL credentials:
+   ```xml
+   <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/merchant_db</property>
+   <property name="hibernate.connection.username">your_username</property>
+   <property name="hibernate.connection.password">your_password</property>
+   <property name="hibernate.hbm2ddl.auto">update</property>
+   ```
 
-	private static void saveMerchant() {
-		System.out.println("Enter Merchant info---name,phone,gstno,email,password");
-		String name = sc.next();
-		long ph = sc.nextLong();
-		String gst = sc.next();
-		String em = sc.next();
-		String pw = sc.next();
+4. **Add dependencies**
 
-		Merchant m = new Merchant();
+   Make sure your build path includes:
+   - `hibernate-core.jar`
+   - `mysql-connector-java.jar`
 
-		m.setName(name);
-		m.setPhone(ph);
-		m.setGst_num(gst);
-		m.setEmail(em);
-		m.setPassword(pw);
+5. **Run the application**
 
-		Merchant mdb = mdao.saveMerchant(m);
-		System.out.println("Merchant is saved with an id :" + mdb.getId());
-	}
+   Run `MerchantProductController.java` as a Java application.
 
-	// 2. Update the Merchant
+---
 
-	private static void updateMerchant() {
+## 💡 Usage
 
-		System.out.println("Enter merchan info---id,name,phone,gstno,email,password");
-		Merchant m = new Merchant();
-		m.setId(sc.nextInt());
-		m.setName(sc.next());
-		m.setPhone(sc.nextLong());
-		m.setGst_num(sc.next());
-		m.setEmail(sc.next());
-		m.setPassword(sc.next());
+On launch, the CLI presents a menu:
 
-		Merchant mdb = mdao.updateMerchant(m);
-		if (mdb != null) {
-			System.out.println("Merchant is updated : " + mdb);
-		} else {
-			System.err.println("Unable to update the merchant since id is invalid");
-		}
-	}
+```
+1.  Save Merchant
+2.  Update Merchant
+3.  Find Merchant By Id
+4.  Verify Merchant by email and password
+5.  Verify Merchant by phone and password
+6.  Add Product
+7.  Update Product
+8.  Find Products by id
+9.  Find Products by brand and category
+10. Find Products by merchant id
+Enter your choice:
+```
 
-//3. Find Merchant By Id
+Enter a number and follow the prompts to enter the required details.
 
-	private static void findMerchantById() {
-		System.out.println("Enter Merchant id to find Merchant ");
-		int mid = sc.nextInt();
-		Merchant mdb = mdao.findMerchantById(mid);
-		if (mdb != null) {
-			System.out.println(mdb);
-		} else {
-			System.err.println("Unable to find the merchant information since id is invalid");
-		}
-	}
+---
 
-//4. Verify Merchant by email and password
+## 🗄️ Entity Overview
 
-	private static void verifyMerchantByEmailIdAndPassword() {
-		System.out.println("Enter email");
-		String em = sc.next();
-		System.out.println("Enter password");
-		String pw = sc.next();
-		Merchant mdb = mdao.verifyMerchantByEmailIdAndPassword(em, pw);
-		if (mdb != null) {
-			System.out.println(mdb);
-		} else {
-			System.err.println("Merchant is not found since email id and password is invalid");
-		}
+### Merchant
+| Field | Type |
+|-------|------|
+| id | int (auto) |
+| name | String |
+| phone | long |
+| gst_num | String |
+| email | String |
+| password | String |
 
-	}
+### Product
+| Field | Type |
+|-------|------|
+| id | int (auto) |
+| name | String |
+| brand | String |
+| category | String |
+| cost | double |
+| merchant | Merchant (FK) |
 
-// 5.Verify Merchant by phone and password
-	
-	
-	private static void verifyMerchantByPhoneAndPassword() {
-		System.out.println("Enter phone");
-		long ph = sc.nextLong();
-		System.out.println("Enter password");
-		String pw = sc.next();
-		Merchant mdb = mdao.verifyMerchantByPhoneAndPassword(ph, pw);
-		if (mdb != null) {
-			System.out.println(mdb);
-		} else {
-			System.out.println("Merchant is not found since Phone and password is invalid");
-		}
+---
 
-	}
-	
-	
-	// 6.Add Product
-	
-	private static void addProduct() {
-		System.out.println("Enter Merchant id to add the product");
-		int mid = sc.nextInt();
+## 👩‍💻 Author
 
-		Product p = new Product();
-		System.out.println("Enter Name of the product");
-		p.setName(sc.next());
-		System.out.println("Enter Brand of the product");
-		p.setBrand(sc.next());
-		System.out.println("Enter Category of the product");
-		p.setCategory(sc.next());
-		System.out.println("Enter cost of the product");
-		p.setCost(sc.nextDouble());
+**Alekhya Gontla**  
+[GitHub](https://github.com/alekhyaGontla)
 
-		Product pdb = pdao.addProduct(mid, p);
-		if (pdb != null) {
-			System.out.println("Product is added to the Merchant with an id " + pdb.getId());
-		} else {
-			System.out.println("Unable o add the product since merchant is inavlid");
-		}
+---
 
-	}
-	
-	// 7.Update Product
-	
-	private static void updateProduct() {
-		System.out.println("Enter the product info---id,name,brand,category,cost");
-		Product p = new Product();
-		System.out.println("Enter id");
-		p.setId(sc.nextInt());
-		System.out.println("Enter Name");
-		p.setName(sc.next());
-		System.out.println("Enter Brand");
-		p.setBrand(sc.next());
-		System.out.println("Enter category");
-		p.setCategory(sc.next());
-		System.out.println("Enter cost");
-		p.setCost(sc.nextDouble());
-		Product pdb = pdao.updateProduct(p);
-		if (pdb != null) {
-			System.out.println("Product is updated : " + pdb);
-		} else {
-			System.err.println("Unable to update the product since id is invalid");
-		}
-	}
-	
-	// 8.Find Products by id
-	
-	
-	private static void findProductById() {
-		System.out.println("Enter Product Id");
-		int mid = sc.nextInt();
-		List<Product> lpdb = pdao.findProductByMerchantId(mid);
-		if (lpdb.size() > 0) {
-			for (Product product : lpdb) {
-				System.out.println(product);
-			}
-		} else {
-			System.out.println("Product id is inavlid");
-		}
-	}
+## 📄 License
 
-	// 9.Find Products by brand and category
-	private static void findProductByCategoryAndBrand() {
-		System.out.println("Enter the category");
-		String category = sc.next();
-		List<Product> lpList = pdao.findProductByCategory(category);
-		if (lpList.size() > 0) {
-			for (Product product : lpList) {
-				System.out.println(product);
-			}
-		} else {
-			System.err.println("No Products is found in the database");
-		}
-	}
-
-	
-}
+This project is open source and available under the [MIT License](LICENSE).
